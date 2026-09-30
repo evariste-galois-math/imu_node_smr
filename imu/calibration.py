@@ -127,6 +127,8 @@ def estimate_gyro_gain(
     best_peak = 0.0
     for axis_name, rates in gyro_xyz.items():
         rotation = np.cumsum(np.degrees(rates[motion_start:motion_end]) * dt_seconds[motion_start:motion_end])
+        if np.std(rotation) == 0:
+            continue
         corr = np.corrcoef(rotation, fused)[0, 1]
         if abs(corr) > abs(best_corr):
             best_axis = axis_name
